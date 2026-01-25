@@ -8,7 +8,6 @@ body{
     background: linear-gradient(to top , #041b49 0% , #b9d3f2 100%);
 }
 .login-container{
-   
     color: black;
     height: 100vh;
     display: flex;
@@ -57,7 +56,7 @@ body{
     background-color: #037b17;
 }
 .login-card .error-message{
-    color: red;
+    color: rgb(161, 2, 2);
     margin-top: 10px;
     font-size: 14px;
 }

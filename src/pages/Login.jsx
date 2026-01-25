@@ -1,32 +1,30 @@
 import React, {useState} from "react";
 import "../styles/Login.css";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
-        try {
-            const response = await fetch("https://api.example.com/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
-            if (!response.ok) {
-                throw new Error("Login failed");
-            }
-            const data = await response.json();
-            console.log("Login successful:", data);
-        }
-        catch (err) {
-            setError(err.message);
-        }
-    };
+    e.preventDefault();
+    setError("");
+
+    if (email.trim() === "" || password.trim() === "") {
+        setError("Please enter both email and password.");
+        return;
+    }
+
+    if (email === "admin@example.com" && password === "admin123") {
+        console.log("Login successful");
+        navigate("/send-message"); 
+    } else {
+        setError("Invalid email or password.");
+    }
+};
+
     return (
             <div className="login-container">
                 <form className="login-card" onSubmit={handleSubmit}>
@@ -53,7 +51,7 @@ const Login = () => {
                     />
                     </div>
                     <br /> <br />
-                    <button type="submit">Login</button>
+                    <button  type="submit">Login</button>
                 </form>
             </div>
        
