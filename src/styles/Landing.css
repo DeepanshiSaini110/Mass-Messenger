@@ -1,0 +1,152 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    margin: 0;
+    background: radial-gradient(circle at top , #1a2a3a 0%, #0b0f1a 40% #070a14 100%);
+    color: #eaeaea;
+    overflow-x: hidden;
+}
+.page-wrapper{
+    min-height: 100vh;
+    display: flex;              
+    flex-direction: column;    
+    justify-content: space-between; 
+    background: radial-gradient(circle at top left , #1b3b2f,transparent 40%),radial-gradient(circle at top right, #2a1b3b,transparent 45%),radial-gradient(circle at bottom , #02030a,#02030a);
+    color: #e8f6ff;
+    position: relative;
+    overflow-x: hidden;
+}
+.grid-overlay{
+    position: fixed;
+    inset: 0;
+    background-image: linear-gradient(rgba(0,255,170,0.06) 1px, transparent 1px);
+    background-size: 70px 70px;
+    opacity: 0.25;
+    pointer-events: none;
+}
+.content{
+    position: relative;
+    z-index: 2;
+    
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.header{
+    text-align: center;
+    padding: 40px 20px;
+}
+.logo{
+    font-size: 2rem;
+    letter-spacing: 3px;
+    color: #7fffd4;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-bottom: 40px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    
+}
+.icon{
+    margin-right: 8px;
+    color:#7cffc4;
+}
+.hero{
+    min-height: 50vh;
+    text-align: center;
+    padding: 80px 20px 40px;
+    background-image: linear-gradient(rgba(0,255,200,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,200,0.05)1px,transparent 1px);
+    background-size: 60px 60px;
+}
+h1{
+    font-size: 3rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #ffffff;
+}
+.hero p{
+    max-width: 600px;
+    margin: 0 auto 30px;
+    font-size: 1.05rem;
+    color: #b8c4d0;
+    line-height: 1.6;
+}
+
+.title{
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+.subtitle{
+    font-size: 8rem;
+    color: #9bb3c8;
+    margin: 0 auto 40px;
+    max-width: 650px;
+    line-height: 1.6;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.page-wrapper::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+    opacity: 0.08;
+    pointer-events: none;
+}
+.cta-button{
+    background: linear-gradient(135deg,#6fffd2,#9bffea);
+    color: #052a23;
+    padding: 12px 34px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: 0 0 20px rgba(120,255,220,0.35);
+    transition: all 0.3s ease;
+}
+.cta-button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(120,255,220,0.55);
+}
+.features{
+    margin-top: 20px;
+    padding-bottom: 80px;
+}
+.features .grid{
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    flex-wrap: nowrap;
+    
+}
+.features .card{
+    width: 300px;
+    padding: 22px;
+    background: rgba(18,26,32,0.55);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: 1px solid rgba(120,255,220,0.18);
+    color: #dfeeee;
+    box-shadow: 0 0 28px rgba(0,0,0,0.6),inset 0 0 12px rgba(120,255,220,0.05);
+    transition: border 0.3s ease;
+}
+.features .card .icon{
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+.features .card h2{
+    font-size: 20px;
+    margin-bottom: 8px;
+    color:#e9fffa;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.features p{
+    font-size: 16px;
+    color: #e9fffa;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
