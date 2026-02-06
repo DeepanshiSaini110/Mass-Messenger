@@ -1,6 +1,8 @@
 import React ,{ useState } from "react";
+import "../styles/theme.css";
 import "../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
+
 
 const Auth = ({ onAuth }) => {
     
@@ -32,7 +34,7 @@ const Auth = ({ onAuth }) => {
                 if(onAuth){
                     onAuth(true);
                 }
-                navigate("/send-message");
+                navigate("/controlcenter");
             }
             else{
                 setError("Invalid email or password");
@@ -40,7 +42,7 @@ const Auth = ({ onAuth }) => {
         }
     };
     return (
-        <div className="container">
+        <div className="auth-container bg-cyber bg-grid">
             <div className="auth-card">
                 <h2>Login Form</h2>
                 <div className="box">
