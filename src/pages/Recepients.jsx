@@ -1,34 +1,49 @@
-import React, { useState } from 'react'; // Import React and useState for memory
-import "../styles/theme.css";
+import { useState } from "react";
+import "../styles/theme.css"
+import "../styles/Recipients.css";
 
-function Recipients(props) { // Create function
-  const [name, setName] = useState(""); // Variable to store what we type in the name box
-
-  function save() { // Function to save the name
-    if (name !== "") { // Check if name is not empty
-      props.onAdd(name); // Send name to the Master List in App.js
-      setName(""); // Clear the input box
-    }
-  }
-
-  return ( // Start UI
-    <div style={{ padding: '20px' }}> {/* Container */}
-      <h2>Manage People</h2> {/* Heading */}
-      <input 
-        value={name} // Link input to 'name' variable
-        onChange={(e) => setName(e.target.value)} // Update 'name' as we type
-        placeholder="Enter Name" // Hint text
-      />
-      <button onClick={save}>Add Contact</button> {/* Click to save */}
-      
-      <h3>Contact List:</h3> {/* List heading */}
-      <ul> {/* Start bullet list */}
-        {props.data.map((item, index) => ( // Loop through contacts from App.js
-          <li key={index}>{item}</li> // Show each contact as a bullet point
-        ))}
-      </ul> {/* End list */}
+export default function Recipients(){
+  const [recipients,setRecipients]=useState([]);
+  const [search,setSearch]=useState("");
+  const filteredRecipients=recipients.filter(r=> r.name.toLowerCase().includes(search.toLowerCase()) || r.email.toLowerCase().includes(search.toLowerCase()));
+  return(
+    <div className="recipients-container bg-cyber bg-grid">
+      <header className="page-header">
+        <div>
+          <h1 className="page-title">Message Recipients 📬</h1>
+          <p className="page-subtitle">Maanage Your Contact List For Masss Messaging</p>
+        </div>
+        <div className="header-actions">
+          <span className="count-badge">{recipients.length} recipients</span>
+          <button className="primary-btn"> + Add Recipient</button>
+        </div>
+      </header>
+      <br /> <br />
+      <div className="filter-box">
+        <input type="text" placeholder="Search by name or email...."  value={search} onChange={(e)=> setSearch(e.target.value)}/>
+      </div>
+      {filteredRecipients.length===0?(
+        <div className="empty-state">
+          <div className="emoji">📬</div>
+          <h3>No Recipients Yet</h3> <br />
+          <p>Add Your First Recipient to get Started</p><br />
+          <button className="primary-btn">
+            + Add Your First Recipient 
+          </button>
+        </div>
+      ):(
+        <div className="recipient-list">
+          {filteredRecipients.map((r,index)=>(
+            <div className="recipient-row" key={index}>
+              <div>
+                <h4>{r.name}</h4>
+                <p>{r.email}</p>
+              </div>
+              <button className="danger-btn">Delete button</button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
-
-export default Recipients; // Export for App.js
