@@ -17,6 +17,13 @@ body{
     background: radial-gradient(circle at top left , #1b3b2f,transparent 40%),radial-gradient(circle at top right, #2a1b3b,transparent 45%),radial-gradient(circle at bottom , #02030a,#02030a);
     
 }
+.error-text {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
 .auth-card{
     width: 400px;
     padding: 22px;

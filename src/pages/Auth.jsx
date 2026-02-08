@@ -50,6 +50,7 @@ const Auth = ({ onAuth }) => {
                     <button className={isSignUp ? "active" : ""} onClick={() => setIsSignUp(true)}>Sign Up</button>
                 </div>
                 <form onSubmit={handleSubmit}>
+                    {error && <p className="error-text">{error}</p>}
                     <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     {!isSignUp && (

@@ -6,7 +6,7 @@ import "../styles/Logs.css";
 const ITEMS_PER_PAGE=5;
 
 export default function Logs(){
-  const [logs,setLogs]=useState([]); //empty initially
+  const [logs,setLogs]=useState([]); 
   const [search,setSearch]=useState("");
   const [status,setStatus]=useState("");
   const [page,setPage]=useState(1);
