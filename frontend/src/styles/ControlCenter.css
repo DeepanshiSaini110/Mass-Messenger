@@ -40,7 +40,11 @@ body{
 }
 .header{
     margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 .brand{
     color: #34d399;
     letter-spacing: 3px;
@@ -54,7 +58,7 @@ body{
     font-weight: 700;
     margin-bottom: 10px;
 }
-.subtitle{
+.header .subtitle{
     color: #94a3b8;
     font-size: 20px;
 }

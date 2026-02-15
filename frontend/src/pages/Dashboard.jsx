@@ -2,14 +2,28 @@ import React from 'react'; // Import React
 import "../styles/theme.css";
 import "../styles/Dashboard.css"
 import { useEffect } from 'react';
+import api from "./api";
 
 export default function Dashboard(){
-  useEffect(()=>{
-    animateCounter("messageSent","12.4k");
-    animateCounter("deliveryRate","94.2%");
-    animateCounter("activeRecipients",8342);
-    animateCounter("openRate","64.8%");
-  },[]);
+  useEffect(() => {
+
+  const loadStats = async () => {
+    try {
+      const res = await api.get("/api/dashboard-stats");
+
+      animateCounter("messageSent", res.data.messageSent);
+      animateCounter("deliveryRate", res.data.deliveryRate);
+      animateCounter("activeRecipients", res.data.activeRecipients);
+      animateCounter("openRate", res.data.openRate);
+
+    } catch (err) {
+      console.log("DASHBOARD ERROR:", err);
+    }
+  };
+
+  loadStats();
+
+}, []);
   return(
     <div className="dashboard-container bg-cyber bg-grid">
       <div className="dashboard-wrapper">
@@ -36,10 +50,10 @@ function Metric({icon,label,valueId,subtitle,trend}){
       <div>
         <span className="metric-icon">{icon}</span>
         <p className="metric-label">{label}</p>
-        <p className="metric-value" id='{valueId}'>0</p>
-        <p className="metric-subtitle" id='{subtitle}'>0</p>
+        <p className="metric-value" id={valueId}>0</p>
+        <p className="metric-subtitle" id={subtitle}>0</p>
         </div>
-        <p className="metric-trend" id='{trend}'>0</p>
+        <p className="metric-trend" id={trend}>0</p>
       
     </div>
   );

@@ -1,6 +1,8 @@
 import React,{useEffect,useState} from "react"; 
 import "../styles/theme.css";
 import "../styles/Logs.css";
+import api from "./api";
+
 
 
 const ITEMS_PER_PAGE=5;
@@ -11,11 +13,21 @@ export default function Logs(){
   const [status,setStatus]=useState("");
   const [page,setPage]=useState(1);
 
-  useEffect(()=>{
-   fetch("/api/logs")
-   .then(res=>res.json())
-   .then(data=>setLogs(data));
-  },[]);
+  useEffect(() => {
+
+  const loadLogs = async () => {
+    try {
+      const res = await api.get("/api/logs");
+      setLogs(res.data);
+    } catch (err) {
+      console.log("LOAD LOGS ERROR:", err);
+    }
+  };
+
+  loadLogs();
+
+}, []);
+
   const filteredLogs=logs.filter(log=>{
     const matchText=log.recipient?.toLowerCase().includes(search.toLowerCase()) || log.email?.toLowerCase().includes(search.toLowerCase()) ||log.message?.toLowerCase().includes(search.toLowerCase());
     const matchStatus=!status || log.status === status;

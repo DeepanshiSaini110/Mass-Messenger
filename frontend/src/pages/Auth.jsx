@@ -2,6 +2,7 @@ import React ,{ useState } from "react";
 import "../styles/theme.css";
 import "../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
+import api from "./api";
 
 
 const Auth = ({ onAuth }) => {
@@ -11,40 +12,54 @@ const Auth = ({ onAuth }) => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
     
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setError("");
-        if(!email || !password){
-            setError("Please fill all the fields");
-            return;
-        }
-        if(isSignUp){
-    
-            localStorage.setItem("users", JSON.stringify({email, password}));
-            setError("Sign Up Successful! Please Login.");
-            setIsSignUp(false);
-            setEmail("");
-            setPassword("");
-        }
-        else{
-            const storedUsers = JSON.parse(localStorage.getItem("users"));
-            if(storedUsers && storedUsers.email === email && storedUsers.password === password){
-                localStorage.setItem("isAuthenticated", "true");
-                if(onAuth){
-                    onAuth(true);
-                }
-                navigate("/controlcenter");
-            }
-            else{
-                setError("Invalid email or password");
-            }
-        }
-    };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setError("");
+
+  if (!email || !password) {
+    setError("Please fill all the fields");
+    return;
+  }
+  try {
+    if (isSignUp) {
+      await api.post("/auth/register", {
+        email,
+        password
+      });
+
+      setError("Sign Up Successful! Please Login.");
+      setIsSignUp(false);
+      setEmail("");
+      setPassword("");
+
+    } else {
+      const res = await api.post("/auth/login", {
+        email,
+        password
+      });
+      localStorage.setItem("token", res.data.token);
+
+      if (onAuth) onAuth(true);
+
+      navigate("/controlcenter");
+    }
+
+  } catch (err) {
+  console.log("ERROR:", err.response || err);
+  setError(
+    err.response?.data?.message || "Server Error"
+  );
+}
+}
+
     return (
         <div className="auth-container bg-cyber bg-grid">
             <div className="auth-card">
-                <h2>Login Form</h2>
+                <h2>{isSignUp ? "Create Account" : "Welcome Back"}</h2>
+
                 <div className="box">
                     <button className={isSignUp ? "" : "active"} onClick={() => setIsSignUp(false)}>Login</button>
                     <button className={isSignUp ? "active" : ""} onClick={() => setIsSignUp(true)}>Sign Up</button>
@@ -52,7 +67,14 @@ const Auth = ({ onAuth }) => {
                 <form onSubmit={handleSubmit}>
                     {error && <p className="error-text">{error}</p>}
                     <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+
+                    <input type={showPassword ? "text" : "password"} 
+  placeholder="Password" 
+  value={password} 
+  onChange={(e) => setPassword(e.target.value)} 
+  required 
+/>
+
                     {!isSignUp && (
                         <p className="forgot">Forgot Password?</p>
                     )}
