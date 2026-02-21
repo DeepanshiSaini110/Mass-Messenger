@@ -11,7 +11,7 @@ export default function Dashboard(){
     try {
       const res = await api.get("/api/dashboard-stats");
 
-      animateCounter("messageSent", res.data.messageSent);
+      animateCounter("messageSent", res.data.messagesSent);
       animateCounter("deliveryRate", res.data.deliveryRate);
       animateCounter("activeRecipients", res.data.activeRecipients);
       animateCounter("openRate", res.data.openRate);

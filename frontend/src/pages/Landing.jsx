@@ -13,10 +13,6 @@ const Landing = () => {
             <div className="content">
                 <header className="header">
                     <div className="logo">&lt;/&gt; CODEVIRUS SECURITY</div>
-                    <div className="nav">
-                        <button className="nav-btn" onClick={()=>navigate("/login")}>Login</button>
-                        <button className="nav-cta" onClick={()=>navigate("/login")}>Get Started</button>
-                    </div>
 
                         </header>
                 <main>

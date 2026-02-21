@@ -38,41 +38,17 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:30px 60px;
+  padding:20px 40px;
 }
-
 .logo{
     font-size: 2rem;
     letter-spacing: 3px;
     color: #7fffd4;
     font-weight: 500;
     opacity: 0.9;
-    margin-bottom: 40px;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    
+    margin-bottom: 30px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;    
 }
-.nav{
-  display:flex;
-  gap:15px;
-}
-
-.nav-btn{
-  background:transparent;
-  border:1px solid rgba(120,255,220,0.3);
-  color:#e8f6ff;
-  padding:8px 18px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.nav-cta{
-  background:linear-gradient(135deg,#6fffd2,#9bffea);
-  border:none;
-  padding:8px 20px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
 .icon{
     margin-right: 8px;
     color:#7cffc4;
@@ -97,14 +73,12 @@ body{
   filter:blur(80px);
   z-index:-1;
 }
-
 .stats{
   display: flex;
   justify-content: center;
   gap: 40px;
   margin-top: 40px;
 }
-
 .stats h3{
   font-size: 1.6rem;
   color: #7fffd4;
@@ -114,7 +88,6 @@ body{
   font-size: 0.9rem;
   color: #9bb3c8;
 }
-
 h1{
     font-size: 3rem;
     font-weight: 500;
@@ -128,7 +101,6 @@ h1{
     color: #b8c4d0;
     line-height: 1.6;
 }
-
 .title{
     font-size: 3.5rem;
     font-weight: 800;
@@ -176,10 +148,7 @@ h1{
     display: flex;
     justify-content: center;
     gap: 26px;
-    flex-wrap: wrap;
-
-
-    
+    flex-wrap: wrap;   
 }
 .features .card{
     width: 300px;
@@ -215,17 +184,14 @@ h1{
   padding: 100px 20px;
   text-align: center;
 }
-
 .section-title{
   font-size: 2.5rem;
   margin-bottom: 15px;
 }
-
 .section-subtitle{
   color: #9bb3c8;
   margin-bottom: 60px;
 }
-
 .steps-container{
   display: flex;
   justify-content: center;
@@ -257,25 +223,19 @@ h1{
 .stats div{
   transition: all 0.3s ease;
 }
-
 .stats div:hover{
   transform: translateY(-5px);
 }
-
-
 @keyframes fadeUp{
   to{
     opacity:1;
     transform:translateY(0);
   }
 }
-
-
 .step-card:hover{
   transform: translateY(-8px);
   box-shadow: 0 0 30px rgba(120,255,220,0.4);
 }
-
 .step-number{
   font-size: 1.5rem;
   font-weight: bold;
@@ -294,14 +254,10 @@ h1{
   font-size:0.9rem;
   border-top:1px solid rgba(120,255,220,0.1);
 }
-
-
-
 @media(max-width:768px){
   .title{
     font-size:2.2rem;
   }
-
   .stats{
     flex-direction:column;
     gap:20px;
@@ -311,5 +267,5 @@ h1{
   }
   .arrow{
     display:none;
-}
+  }
 }
