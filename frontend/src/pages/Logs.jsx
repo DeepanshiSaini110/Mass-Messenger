@@ -22,7 +22,7 @@ export default function Logs() {
     loadLogs();
   }, []);
 
-  // 🔍 Search filter
+
   const filteredLogs = logs.filter((log) =>
     log.message.toLowerCase().includes(search.toLowerCase())
   );
@@ -74,17 +74,9 @@ export default function Logs() {
                 paginatedLogs.map((log) => (
                   <tr key={log._id}>
                     <td className="timestamp">{log.timestamp}</td>
-
-                    {/* ✅ Clean recipient count */}
                     <td>{log.recipients.length} recipient(s)</td>
-
-                    {/* ✅ Channel */}
                     <td className="channel">{log.channel.toUpperCase()}</td>
-
-                    {/* ✅ Message */}
                     <td className="message">{log.message}</td>
-
-                    {/* ✅ Status */}
                     <td className="status delivered">● Delivered</td>
                   </tr>
                 ))
@@ -93,7 +85,6 @@ export default function Logs() {
           </table>
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="pagination">
             {[...Array(totalPages)].map((_, i) => (

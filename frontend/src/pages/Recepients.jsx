@@ -12,7 +12,6 @@ export default function Recipients() {
   const [loading, setLoading] = useState(false);
   const [csvFile, setCsvFile] = useState(null);
 
-  // Load recipients
   const loadRecipients = async () => {
     try {
       setLoading(true);
@@ -29,7 +28,6 @@ export default function Recipients() {
     loadRecipients();
   }, []);
 
-  // Add single recipient
   const addRecipient = async () => {
     if (!name || (!email && !phone)) {
       alert("Enter name and email OR phone");
@@ -48,7 +46,6 @@ export default function Recipients() {
     }
   };
 
-  // Import CSV
   const uploadCSV = async () => {
     if (!csvFile) {
       alert("Please select a CSV file");
@@ -74,7 +71,6 @@ export default function Recipients() {
     }
   };
 
-  // Delete recipient
   const deleteRecipient = async (id) => {
     if (!window.confirm("Delete this recipient?")) return;
 
@@ -86,7 +82,7 @@ export default function Recipients() {
     }
   };
 
-  // Search filter
+
   const filteredRecipients = recipients.filter((r) =>
     [r.name, r.email, r.phone]
       .filter(Boolean)
@@ -117,7 +113,6 @@ export default function Recipients() {
         </div>
       </header>
 
-      {/* Add / Import */}
       <div className="add-box styled-add-box horizontal-box">
         <div className="input-group">
           <input
@@ -158,7 +153,6 @@ export default function Recipients() {
         </button>
       </div>
 
-      {/* List */}
       {loading ? (
         <div className="empty-state">
           <h3>Loading recipients...</h3>
