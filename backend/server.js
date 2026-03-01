@@ -90,6 +90,28 @@ const twilioClient = twilio(
   process.env.TWILIO_SID,
   process.env.TWILIO_TOKEN
 );
+/* ================= AUTH Register ================= */
+app.post("/auth/register", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    await User.create({
+      email,
+      password: hashed,
+    });
+
+    res.json({ message: "User registered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 /* ================= AUTH ================= */
 
@@ -236,7 +258,7 @@ app.get("/api/logs", async (req, res) => {
 
     res.json(
       logs.map(log => ({
-        _id: log._id,
+        _id: log._id.toString(),
         timestamp: log.createdAt.toLocaleString(),
         channel: log.channel,
         recipients: log.recipients,   // ✅ ARRAY hi bhejo
@@ -247,6 +269,81 @@ app.get("/api/logs", async (req, res) => {
   } catch (err) {
     console.error("GET LOGS ERROR:", err);
     res.status(500).json({ message: "Server error" });
+  }
+});
+// DELETE single message log
+app.delete("/api/logs/:id", async (req, res) => {
+  try {
+    const deleted = await MessageLog.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Log not found" });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(400).json({ message: "Invalid log ID" });
+  }
+});
+// DELETE all message history
+app.delete("/api/logs", async (req, res) => {
+  try {
+    await MessageLog.deleteMany({});
+    res.json({ success: true, message: "All history cleared" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to clear history" });
+  }
+});
+const ExcelJS = require("exceljs");
+
+// DOWNLOAD logs as Excel
+app.get("/api/logs/export/excel", async (req, res) => {
+  try {
+    const logs = await MessageLog.find().sort({ createdAt: -1 });
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Message Logs");
+
+    // Columns
+    worksheet.columns = [
+      { header: "Timestamp", key: "timestamp", width: 25 },
+      { header: "Channel", key: "channel", width: 15 },
+      { header: "Recipients Count", key: "recipientsCount", width: 20 },
+      { header: "Recipients", key: "recipients", width: 40 },
+      { header: "Message", key: "message", width: 50 },
+      { header: "Status", key: "status", width: 15 },
+    ];
+
+    // Rows
+    logs.forEach(log => {
+      worksheet.addRow({
+        timestamp: log.createdAt.toLocaleString(),
+        channel: log.channel.toUpperCase(),
+        recipientsCount: log.recipients.length,
+        recipients: log.recipients.join(", "),
+        message: log.message,
+        status: "Delivered",
+      });
+    });
+
+    // Header styling
+    worksheet.getRow(1).font = { bold: true };
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=message_logs.xlsx"
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+
+  } catch (err) {
+    console.error("EXCEL EXPORT ERROR:", err);
+    res.status(500).json({ message: "Failed to export logs" });
   }
 });
 

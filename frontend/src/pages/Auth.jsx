@@ -68,12 +68,8 @@ const Auth = ({ onAuth }) => {
                     {error && <p className="error-text">{error}</p>}
                     <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
-                    <input type={showPassword ? "text" : "password"} 
-  placeholder="Password" 
-  value={password} 
-  onChange={(e) => setPassword(e.target.value)} 
-  required 
-/>
+                    <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} 
+                    onChange={(e) => setPassword(e.target.value)} required />
 
                     {!isSignUp && (
                         <p className="forgot">Forgot Password?</p>

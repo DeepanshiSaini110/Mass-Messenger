@@ -10,6 +10,7 @@ export default function Logs() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
+
   useEffect(() => {
     const loadLogs = async () => {
       try {
@@ -30,6 +31,37 @@ export default function Logs() {
   const start = (page - 1) * ITEMS_PER_PAGE;
   const paginatedLogs = filteredLogs.slice(start, start + ITEMS_PER_PAGE);
   const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE);
+  const deleteLog = async (id) => {
+    console.log("Deleting log id:", id);
+  if (!window.confirm("Delete this message history?")) return;
+
+  await api.delete(`/api/logs/${id}`);
+  setLogs(logs.filter(log => log._id !== id));
+};
+const clearAllHistory = async () => {
+  if (!window.confirm("Delete ALL message history?")) return;
+  await api.delete("/api/logs");
+  setLogs([]);
+};
+const downloadExcel = async () => {
+  try {
+    const response = await api.get("/api/logs/export/excel", {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "message_logs.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to download Excel");
+  }
+};
+  
 
   return (
     <div className="logs-container bg-cyber bg-grid">
@@ -49,6 +81,20 @@ export default function Logs() {
               setPage(1);
             }}
           />
+          <button
+  className="danger-btn"
+  onClick={clearAllHistory}
+  disabled={logs.length === 0}
+>
+   Clear All
+</button>
+<button
+    className="export-btn"
+    onClick={downloadExcel}
+    disabled={logs.length === 0}
+  >
+    ⬇ Download Excel
+  </button>
         </div>
 
         <div className="table-container">
@@ -60,13 +106,14 @@ export default function Logs() {
                 <th>Channel</th>
                 <th>Message</th>
                 <th>Status</th>
+                 <th>Action</th>   
               </tr>
             </thead>
 
             <tbody>
               {paginatedLogs.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="empty">
+                  <td colSpan="6" className="empty">
                     No Logs Found
                   </td>
                 </tr>
@@ -78,6 +125,10 @@ export default function Logs() {
                     <td className="channel">{log.channel.toUpperCase()}</td>
                     <td className="message">{log.message}</td>
                     <td className="status delivered">● Delivered</td>
+                    <td><button className="delete-btn" onClick={() => deleteLog(log._id)}>
+                      🗑️ Delete
+                    </button>
+                    </td>
                   </tr>
                 ))
               )}

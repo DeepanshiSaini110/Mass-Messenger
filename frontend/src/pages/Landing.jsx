@@ -80,9 +80,7 @@ const Landing = () => {
                         </div>
                     </section>
                 </main>
-                <footer className="footer">
-                    <p>© 2026 CodeVirus Security. All Rights Reserved.</p>
-                </footer>
+                
              </div>
         </div>
     );
