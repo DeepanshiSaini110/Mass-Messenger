@@ -8,7 +8,7 @@ export default function ControlCenter(){
         <div className="page bg-cyber bg-grid">
             <div className="container">
                 <header className="header fade-up">
-                    <p className="brand">&lt;/&gt;CODEVIRUS SECURITY &lt;/&gt;</p> <br />
+                    <p className="brand">&lt;/&gt;Mass Messenger &lt;/&gt;</p> <br />
                     <h1>Control Center</h1>
                     <p className="subtitle">Select an Option to Continue</p>
                 </header>

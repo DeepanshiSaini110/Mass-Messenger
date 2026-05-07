@@ -12,7 +12,7 @@ const Landing = () => {
             <div className="grid-overlay"></div>
             <div className="content">
                 <header className="header">
-                    <div className="logo">&lt;/&gt; CODEVIRUS SECURITY</div>
+                    <div className="logo">&lt;/&gt; Mass Messenger</div>
 
                         </header>
                 <main>
