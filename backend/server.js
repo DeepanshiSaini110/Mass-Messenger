@@ -13,11 +13,33 @@ const fs = require("fs");
 
 const app = express();
 
+const http = require("http");
+
+const { Server } = require("socket.io");
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+});
+
 /* ================= MIDDLEWARE ================= */
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
+io.on("connection", (socket) => {
 
+  console.log("User Connected");
+
+  socket.on("disconnect", () => {
+
+    console.log("User Disconnected");
+
+  });
+
+});
 /* ================= MONGODB ================= */
 
 mongoose
@@ -190,6 +212,9 @@ app.post(
           });
         }
       }
+      io.emit("new_notification", {
+  text: "New campaign sent successfully"
+});
 
       res.json({ success: true, message: "Messages sent successfully" });
 
@@ -208,8 +233,18 @@ app.post("/api/recipients", async (req, res) => {
     if (!name || (!email && !phone)) {
       return res.status(400).json({ message: "Invalid data" });
     }
-    const recipient = await Recipient.create({ name, email, phone });
-    res.json(recipient);
+   const recipient =
+  await Recipient.create({
+    name,
+    email,
+    phone
+  });
+
+io.emit("new_notification", {
+  text: "New recipient added"
+});
+
+res.json(recipient);
   } catch {
     res.status(500).json({ message: "Server error" });
   }
@@ -246,29 +281,61 @@ app.get("/api/recipients", async (req, res) => {
 });
 
 app.delete("/api/recipients/:id", async (req, res) => {
-  await Recipient.findByIdAndDelete(req.params.id);
-  res.json({ success: true });
+
+  await Recipient.findByIdAndDelete(
+    req.params.id
+  );
+
+  io.emit("new_notification", {
+    text: "Recipient deleted"
+  });
+
+  res.json({
+    success: true
+  });
+
 });
+
 
 /* ================= LOGS ================= */
 
 app.get("/api/logs", async (req, res) => {
   try {
-    const logs = await MessageLog.find().sort({ createdAt: -1 });
+
+    const logs = await MessageLog.find()
+      .sort({ createdAt: -1 });
 
     res.json(
+
       logs.map(log => ({
+
         _id: log._id.toString(),
-        timestamp: log.createdAt.toLocaleString(),
+
+        timestamp:
+          log.createdAt.toLocaleString(),
+
         channel: log.channel,
-        recipients: log.recipients,   // ✅ ARRAY hi bhejo
+
+        recipients: log.recipients,
+
+        title: log.title,
+
         message: log.message,
+
         status: "Delivered"
+
       }))
+
     );
+
   } catch (err) {
+
     console.error("GET LOGS ERROR:", err);
-    res.status(500).json({ message: "Server error" });
+
+    res.status(500).json({
+      message: "Server error"
+    });
+
   }
 });
 // DELETE single message log
@@ -350,20 +417,54 @@ app.get("/api/logs/export/excel", async (req, res) => {
 /* ================= DASHBOARD ================= */
 
 app.get("/api/dashboard-stats", async (req, res) => {
-  const totalRecipients = await Recipient.countDocuments();
-  const totalMessages = await MessageLog.countDocuments();
 
-  res.json({
-    activeRecipients: totalRecipients,
-    messagesSent: totalMessages,
-    deliveryRate: totalMessages ? "95%" : "0%",
-    openRate: totalMessages ? "70%" : "0%",
-  });
+  try {
+
+    const totalRecipients =
+      await Recipient.countDocuments();
+
+    const totalMessages =
+      await MessageLog.countDocuments();
+
+    // Example analytics
+
+    const deliveryRate =
+      totalMessages ? 98.5 : 0;
+
+    const openRate =
+      totalMessages ? 70.5 : 0;
+
+    res.json({
+
+      messagesSent: totalMessages,
+
+      deliveryRate,
+
+      activeRecipients: totalRecipients,
+
+      openRate
+
+    });
+
+  } catch (err) {
+
+    console.log(
+      "Dashboard Stats Error:",
+      err
+    );
+
+    res.status(500).json({
+      message: "Server Error"
+    });
+
+  }
+
 });
-
 /* ================= SERVER ================= */
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on port ${PORT}`)
+server.listen(PORT, () =>
+  console.log(
+    `🚀 Server running on port ${PORT}`
+  )
 );

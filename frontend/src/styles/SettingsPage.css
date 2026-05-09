@@ -1,0 +1,115 @@
+/* SettingsPage.css */
+
+.settings-page{
+  min-height: 100vh;
+  background: #070b17;
+  color: white;
+  padding: 30px;
+}
+
+.settings-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.settings-header h1{
+  font-size: 34px;
+}
+
+.settings-header p{
+  color: #8d98b4;
+  margin-top: 5px;
+}
+
+.save-btn{
+  background: linear-gradient(90deg,#8bf6d4,#018d57);
+  border: none;
+  color: rgb(5, 5, 5);
+  padding: 14px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* CARD */
+
+.settings-card{
+  background: #101827;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 22px;
+  padding: 28px;
+  margin-bottom: 25px;
+}
+
+.settings-card h2{
+  margin-bottom: 25px;
+}
+
+/* INPUT */
+
+.input-group{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 22px;
+}
+
+.input-group label{
+  margin-bottom: 10px;
+  color: #8d98b4;
+}
+
+.input-group input{
+  background: #161f35;
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  color: white;
+  outline: none;
+}
+
+/* TOGGLE */
+
+.toggle-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.toggle-row p{
+  color: #8d98b4;
+  margin-top: 4px;
+}
+
+.toggle{
+  width: 60px;
+  height: 32px;
+  background: #2a334d;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+
+.toggle .circle{
+  width: 24px;
+  height: 24px;
+  background: rgb(132, 249, 237);
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: 0.3s;
+}
+
+.toggle.active{
+  background: #016570;
+}
+
+.toggle.active .circle{
+  left: 32px;
+  
+}

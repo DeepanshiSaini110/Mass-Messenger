@@ -85,7 +85,26 @@ form input:focus{
     border: 1px solid #7fffd4;
     box-shadow: 0 0 10px rgba(120,255,220,0.4);
 }
+.password-box{
+  position: relative;
+  width: 100%;
+}
 
+.password-box input{
+  width: 100%;
+}
+
+.show-btn{
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #6afbd9;
+  cursor: pointer;
+  font-weight: 600;
+}
 .forgot{
     text-align: left;
     font-size: 13px;
@@ -118,13 +137,13 @@ form input:focus{
 
 }
 .text a{
-    color: #fa4299;
+    color: #3df015;
     text-decoration: none;
     font-weight: 500;
     cursor: pointer;
 }
 .success{
-  color: #7fffd4;
+  color: #2ef273;
 }
 
 .error{
