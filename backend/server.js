@@ -13,22 +13,22 @@ const fs = require("fs");
 
 const app = express();
 
-const http = require("http");
+// const http = require("http");
 
-const { Server } = require("socket.io");
+// const { Server } = require("socket.io");
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 const allowedOrigins = [
   "https://mass-messenger-up3h.vercel.app"
 ];
 
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    credentials: true
-  }
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: allowedOrigins,
+//     credentials: true
+//   }
+// });
 
 /* ================= MIDDLEWARE ================= */
 
@@ -65,20 +65,23 @@ app.use(
   })
 );
 
-app.options("*", cors());
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 app.use(express.json());
-io.on("connection", (socket) => {
+// io.on("connection", (socket) => {
 
-  console.log("User Connected");
+//   console.log("User Connected");
 
-  socket.on("disconnect", () => {
+//   socket.on("disconnect", () => {
 
-    console.log("User Disconnected");
+//     console.log("User Disconnected");
 
-  });
+//   });
 
-});
+// });
 /* ================= MONGODB ================= */
 
 mongoose
@@ -251,9 +254,9 @@ app.post(
           });
         }
       }
-      io.emit("new_notification", {
-  text: "New campaign sent successfully"
-});
+      // io.emit("new_notification", {
+      //   text: "New campaign sent successfully"
+      // });
 
       res.json({ success: true, message: "Messages sent successfully" });
 
@@ -279,9 +282,9 @@ app.post("/api/recipients", async (req, res) => {
     phone
   });
 
-io.emit("new_notification", {
-  text: "New recipient added"
-});
+// io.emit("new_notification", {
+//   text: "New recipient added"
+//  });
 
 res.json(recipient);
   } catch {
@@ -325,9 +328,9 @@ app.delete("/api/recipients/:id", async (req, res) => {
     req.params.id
   );
 
-  io.emit("new_notification", {
-    text: "Recipient deleted"
-  });
+  // io.emit("new_notification", {
+  //   text: "Recipient deleted"
+  // });
 
   res.json({
     success: true
@@ -501,18 +504,5 @@ app.get("/api/dashboard-stats", async (req, res) => {
 });
 /* ================= SERVER ================= */
 
-const PORT = process.env.PORT || 5000;
-
-if (process.env.NODE_ENV !== "production") {
-
-  server.listen(PORT, () => {
-
-    console.log(
-      `🚀 Server running on port ${PORT}`
-    );
-
-  });
-
-}
 
 module.exports = app;
