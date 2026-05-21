@@ -19,21 +19,37 @@ const { Server } = require("socket.io");
 
 const server = http.createServer(app);
 
+const allowedOrigins = [
+  "https://mass-messenger-up3h.vercel.app"
+];
+
 const io = new Server(server, {
   cors: {
-    origin:
-      "https://mass-messenger-up3h.vercel.app",
+    origin: allowedOrigins,
     credentials: true
   }
 });
 
 /* ================= MIDDLEWARE ================= */
 
+/* ================= MIDDLEWARE ================= */
+
 app.use(
   cors({
-    origin: [
-      "https://mass-messenger-up3h.vercel.app"
-    ],
+    origin: function(origin, callback) {
+
+      if (
+        !origin ||
+        allowedOrigins.includes(origin)
+      ) {
+        callback(null, true);
+      } else {
+        callback(
+          new Error("CORS blocked")
+        );
+      }
+
+    },
     credentials: true,
     methods: [
       "GET",
@@ -48,6 +64,9 @@ app.use(
     ]
   })
 );
+
+app.options("*", cors());
+
 app.use(express.json());
 io.on("connection", (socket) => {
 
@@ -483,8 +502,17 @@ app.get("/api/dashboard-stats", async (req, res) => {
 /* ================= SERVER ================= */
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () =>
-  console.log(
-    `🚀 Server running on port ${PORT}`
-  )
-);
+
+if (process.env.NODE_ENV !== "production") {
+
+  server.listen(PORT, () => {
+
+    console.log(
+      `🚀 Server running on port ${PORT}`
+    );
+
+  });
+
+}
+
+module.exports = app;
