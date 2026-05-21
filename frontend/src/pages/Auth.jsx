@@ -51,9 +51,17 @@ const Auth = ({ onAuth }) => {
     }
 
   } catch (err) {
-  console.log("ERROR:", err.response || err);
+     console.log("FULL ERROR:", err);
+
+  if (err.response) {
+    console.log("STATUS:", err.response.status);
+    console.log("DATA:", err.response.data);
+  }
+
   setError(
-    err.response?.data?.message || "Server Error"
+    err.response?.data?.message ||
+    JSON.stringify(err.response?.data) ||
+    "Server Error"
   );
 }
 }
