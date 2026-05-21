@@ -36,8 +36,18 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true
+    origin: function(origin, callback) {
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+
+    },
+    credentials: true,
+    methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type","Authorization"]
   })
 );
 
@@ -168,7 +178,11 @@ app.post("/auth/register", async (req, res) => {
 
     res.json({ message: "User registered successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    console.error(err);
+    res.status(500).json({
+      message: err.message
+  });
+
   }
 });
 
@@ -176,11 +190,22 @@ app.post("/auth/register", async (req, res) => {
 
 app.post("/auth/login", async (req, res) => {
   try {
+
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(400).json({ message: "Invalid credentials" });
+    const user =
+      await User.findOne({ email });
+
+    if (
+      !user ||
+      !(await bcrypt.compare(
+        password,
+        user.password
+      ))
+    ) {
+      return res.status(400).json({
+        message: "Invalid credentials"
+      });
     }
 
     const token = jwt.sign(
@@ -189,9 +214,22 @@ app.post("/auth/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token, user: { id: user._id, email } });
-  } catch {
-    res.status(500).json({ message: "Server error" });
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        email
+      }
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: err.message
+    });
+
   }
 });
 
@@ -265,26 +303,40 @@ app.post(
 /* ================= RECIPIENTS ================= */
 
 app.post("/api/recipients", async (req, res) => {
+
   try {
-    const { name, email, phone } = req.body;
-    if (!name || (!email && !phone)) {
-      return res.status(400).json({ message: "Invalid data" });
+
+    const { name, email, phone } =
+      req.body;
+
+    if (
+      !name ||
+      (!email && !phone)
+    ) {
+      return res.status(400).json({
+        message:"Invalid data"
+      });
     }
-   const recipient =
-  await Recipient.create({
-    name,
-    email,
-    phone
-  });
 
-// io.emit("new_notification", {
-//   text: "New recipient added"
-//  });
+    const recipient =
+      await Recipient.create({
+        name,
+        email,
+        phone
+      });
 
-res.json(recipient);
-  } catch {
-    res.status(500).json({ message: "Server error" });
+    res.json(recipient);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: err.message
+    });
+
   }
+
 });
 
 app.post(
@@ -316,20 +368,27 @@ app.post(
 app.get("/api/recipients", async (req, res) => {
   res.json(await Recipient.find().sort({ createdAt: -1 }));
 });
-
 app.delete("/api/recipients/:id", async (req, res) => {
 
-  await Recipient.findByIdAndDelete(
-    req.params.id
-  );
+  try {
 
-  // io.emit("new_notification", {
-  //   text: "Recipient deleted"
-  // });
+    await Recipient.findByIdAndDelete(
+      req.params.id
+    );
 
-  res.json({
-    success: true
-  });
+    res.json({
+      success: true
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: err.message
+    });
+
+  }
 
 });
 
