@@ -1,12 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:
-    "https://mass-messenger-l4m3-git-main-deepanshisaini110s-projects.vercel.app",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json"
-  }
+  baseURL: process.env.REACT_APP_API_URL,
+  withCredentials: true
 });
 
 export default api;
