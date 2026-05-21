@@ -24,11 +24,11 @@ export default function Reports() {
   };
 
   const exportExcel = () => {
-    window.open(
-      "http://localhost:5000/api/logs/export/excel",
-      "_blank"
-    );
-  };
+  window.open(
+    `${process.env.REACT_APP_API_URL}/api/logs/export/excel`,
+    "_blank"
+  );
+};
 
   const totalMessages = logs.length;
 

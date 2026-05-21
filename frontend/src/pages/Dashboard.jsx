@@ -83,10 +83,10 @@ export default function Dashboard() {
   useEffect(() => {
 
     const socket = io(
-      "http://localhost:5000"
-    );
+ process.env.REACT_APP_API_URL
+);
 
-    socket.on("connect", () => {
+    socket.on("connect", () => {  
 
       console.log(
         "✅ Socket Connected"
