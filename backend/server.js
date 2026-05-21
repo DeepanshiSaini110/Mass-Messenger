@@ -9,7 +9,6 @@ const nodemailer = require("nodemailer");
 const twilio = require("twilio");
 const multer = require("multer");
 const csv = require("csv-parser");
-const fs = require("fs");
 
 const app = express();
 
@@ -50,6 +49,10 @@ app.use(
     allowedHeaders: ["Content-Type","Authorization"]
   })
 );
+app.options(/.*/, cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 
 
@@ -67,13 +70,27 @@ app.use(express.json());
 // });
 /* ================= MONGODB ================= */
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => {
-    console.error("❌ Mongo Error:", err);
-    process.exit(1);
-  });
+if (!global.mongooseConn) {
+
+  global.mongooseConn =
+    mongoose.connect(
+      process.env.MONGO_URI
+    )
+      .then(() =>
+        console.log(
+          "✅ MongoDB Connected"
+        )
+      )
+      .catch(err =>
+        console.error(
+          "❌ Mongo Error:",
+          err
+        )
+      );
+
+}
+
+
 
 /* ================= MODELS ================= */
 
@@ -131,16 +148,9 @@ const MessageLog =
 
 /* ================= FILE UPLOAD (SINGLE SOURCE) ================= */
 
-if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
-
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: "uploads/",
-    filename: (req, file, cb) =>
-      cb(null, Date.now() + "-" + file.originalname),
-  }),
+  storage: multer.memoryStorage()
 });
-
 /* ================= EMAIL ================= */
 
 const transporter = nodemailer.createTransport({
@@ -271,7 +281,15 @@ app.post(
             to,
             subject: title || "Message",
             text: message,
-            attachments: req.file ? [{ path: req.file.path }] : [],
+            attachments:
+  req.file
+    ? [{
+        filename:
+          req.file.originalname,
+        content:
+          req.file.buffer
+      }]
+    : [],
           });
         } else {
           await twilioClient.messages.create({
@@ -338,59 +356,94 @@ app.post("/api/recipients", async (req, res) => {
   }
 
 });
-
 app.post(
   "/api/recipients/import-csv",
   upload.single("file"),
   async (req, res) => {
+
+    if (!req.file) {
+      return res.status(400).json({
+        message: "CSV file required"
+      });
+    }
+
+    const stream = require("stream");
+
     const results = [];
-    fs.createReadStream(req.file.path)
+
+    const readable =
+      stream.Readable.from(
+        req.file.buffer
+      );
+
+    readable
       .pipe(csv())
-      .on("data", (row) => results.push(row))
+      .on("data", row =>
+        results.push(row)
+      )
       .on("end", async () => {
+
         const saved = [];
+
         for (const r of results) {
-          if (!r.name || (!r.email && !r.phone)) continue;
+
+          if (
+            !r.name &&
+            !r.email &&
+            !r.phone
+          ) continue;
+
           saved.push(
             await Recipient.create({
-              name: r.name.trim(),
-              email: r.email?.trim(),
-              phone: r.phone?.trim(),
+              name:
+                r.name?.trim(),
+              email:
+                r.email?.trim(),
+              phone:
+                r.phone?.trim()
             })
           );
+
         }
-        fs.unlinkSync(req.file.path);
+
         res.json(saved);
+
       });
+
   }
 );
 
 app.get("/api/recipients", async (req, res) => {
   res.json(await Recipient.find().sort({ createdAt: -1 }));
 });
-app.delete("/api/recipients/:id", async (req, res) => {
+app.delete(
+  "/api/recipients/:id",
+  async (req, res) => {
 
-  try {
+    try {
 
-    await Recipient.findByIdAndDelete(
-      req.params.id
-    );
+      await Recipient
+        .findByIdAndDelete(
+          req.params.id
+        );
 
-    res.json({
-      success: true
-    });
+      res.json({
+        success: true
+      });
 
-  } catch (err) {
+    } catch (err) {
 
-    console.error(err);
+      console.error(err);
 
-    res.status(500).json({
-      message: err.message
-    });
+      res.status(500).json({
+        message:
+          err.message
+      });
+
+    }
 
   }
-
-});
+);
 
 
 /* ================= LOGS ================= */
