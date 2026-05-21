@@ -19,9 +19,8 @@ const app = express();
 // const server = http.createServer(app);
 
 const allowedOrigins = [
-  "https://mass-messenger-l4m3.vercel.app",
-  "https://mass-messenger-l4m3-git-main-deepanshisaini110s-projects.vercel.app",
-  "https://mass-messenger-l4m3-g96gz5a77-deepanshisaini110s-projects.vercel.app"
+    "https://mass-messenger-l4m3.vercel.app",
+  "https://mass-messenger-l4m3-git-main-deepanshisaini110s-projects.vercel.app"
 ];
 
 // const io = new Server(server, {
