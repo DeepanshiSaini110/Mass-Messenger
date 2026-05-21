@@ -21,13 +21,33 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*"
+    origin:
+      "https://mass-messenger-up3h.vercel.app",
+    credentials: true
   }
 });
 
 /* ================= MIDDLEWARE ================= */
 
-app.use(cors({ origin: true, credentials: true }));
+app.use(
+  cors({
+    origin: [
+      "https://mass-messenger-up3h.vercel.app"
+    ],
+    credentials: true,
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "OPTIONS"
+    ],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization"
+    ]
+  })
+);
 app.use(express.json());
 io.on("connection", (socket) => {
 
