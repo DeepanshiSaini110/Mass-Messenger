@@ -67,35 +67,57 @@ mongoose
 
 /* ================= MODELS ================= */
 
-const User = mongoose.model(
+const User = mongoose.models.User || mongoose.model(
   "User",
   new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    password: {
+      type: String,
+      required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
   })
 );
 
-const Recipient = mongoose.model(
-  "Recipient",
-  new mongoose.Schema({
-    name: { type: String, required: true },
-    email: String,
-    phone: String,
-    createdAt: { type: Date, default: Date.now },
-  })
-);
-
-const MessageLog = mongoose.model(
-  "MessageLog",
-  new mongoose.Schema({
-    channel: String,
-    title: String,
-    message: String,
-    recipients: [String],
-    createdAt: { type: Date, default: Date.now },
-  })
-);
+const Recipient =
+  mongoose.models.Recipient ||
+  mongoose.model(
+    "Recipient",
+    new mongoose.Schema({
+      name: {
+        type:String,
+        required:true
+      },
+      email:String,
+      phone:String,
+      createdAt:{
+        type:Date,
+        default:Date.now
+      }
+    })
+  );
+const MessageLog =
+  mongoose.models.MessageLog ||
+  mongoose.model(
+    "MessageLog",
+    new mongoose.Schema({
+      channel:String,
+      title:String,
+      message:String,
+      recipients:[String],
+      createdAt:{
+        type:Date,
+        default:Date.now
+      }
+    })
+  );
 
 /* ================= FILE UPLOAD (SINGLE SOURCE) ================= */
 
